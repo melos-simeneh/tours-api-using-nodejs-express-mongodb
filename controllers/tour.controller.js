@@ -6,7 +6,13 @@ exports.getAllTours = (req, res) => {
 exports.createTour = async (req, res) => {
   try {
     const newTour = await Tour.create(req.body);
-    res.status(201).json({ status: "success", data: { tour: newTour } });
+    res
+      .status(201)
+      .json({
+        status: "success",
+        message: "Tour created",
+        data: { tour: newTour },
+      });
   } catch (error) {
     res.status(500).json({ status: "fail", message: "Failed to create tour" });
   }
