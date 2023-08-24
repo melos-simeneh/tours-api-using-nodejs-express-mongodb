@@ -1,4 +1,5 @@
 const Tour = require("../models/tour.model");
+
 exports.getAllTours = async (req, res) => {
   try {
     const tours = await Tour.find();
@@ -39,6 +40,26 @@ exports.createTour = async (req, res) => {
     res.status(500).json({
       status: "fail",
       message: "Failed to create tour",
+      error: error.message,
+    });
+  }
+};
+
+exports.updateTour = async (req, res) => {
+  try {
+    const updatedTour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    res.status(200).json({
+      status: "success",
+      message: "Tour created",
+      data: { tour: updatedTour },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "fail",
+      message: "Failed to update tour",
       error: error.message,
     });
   }
