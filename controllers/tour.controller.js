@@ -57,9 +57,26 @@ exports.updateTour = async (req, res) => {
       data: { tour: updatedTour },
     });
   } catch (error) {
-    res.status(500).json({
+    res.status(404).json({
       status: "fail",
       message: "Failed to update tour",
+      error: error.message,
+    });
+  }
+};
+
+exports.deleteTour = async (req, res) => {
+  try {
+    await Tour.findByIdAndDelete(req.params.id);
+    res.status(204).json({
+      status: "success",
+      message: "Tour deleted",
+      data: null,
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "fail",
+      message: "Failed to delete tour",
       error: error.message,
     });
   }
