@@ -49,7 +49,12 @@ const tourSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now(),
+    select: false,
   },
+});
+
+tourSchema.virtual("durationWeeks").get(() => {
+  return this.duration / 7;
 });
 
 const Tour = mongoose.model("Tour", tourSchema);
