@@ -8,6 +8,14 @@ const tourSchema = new mongoose.Schema(
       required: [true, "Tour name is required"],
       trim: true,
       unique: true,
+      maxLength: [
+        40,
+        "A tour name must have less than or equal to 40 characters ",
+      ],
+      minLength: [
+        10,
+        "A tour name must have greater than or equal to 10 characters ",
+      ],
     },
     slug: String,
     duration: {
@@ -21,14 +29,20 @@ const tourSchema = new mongoose.Schema(
     difficulty: {
       type: String,
       required: [true, "Tour difficulty is required"],
+      enum: {
+        values: ["easy", "medium", "difficult"],
+        message: "Difficulty is either: easy, medium, difficult",
+      },
     },
     ratingsAverage: {
       type: Number,
       default: 4.5,
+      min: [1, "Rating must be above 1"],
+      max: [5, "Rating must be below 5"],
     },
     ratingsQuantity: {
       type: Number,
-      default: 4.5,
+      default: 0,
     },
     price: {
       type: Number,
@@ -65,6 +79,7 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
+//VIRTUAL PROPERTIES
 tourSchema.virtual("durationWeeks").get(function () {
   return this.duration / 7;
 });
@@ -74,7 +89,6 @@ tourSchema.pre("save", function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
-
 // tourSchema.post("save", function (doc, next) {
 //   console.log(doc);
 //   next();
@@ -82,12 +96,12 @@ tourSchema.pre("save", function (next) {
 
 //QUERY MIDDLEWARE
 // tourSchema.pre("find", function (next) {
+
 tourSchema.pre(/^find/, function (next) {
   this.start = Date.now();
   this.find({ secretTour: { $ne: true } });
   next();
 });
-
 tourSchema.post(/^find/, function (docs, next) {
   console.log(`Query took ${Date.now(-this.start)} milliseconds`);
   // console.log(docs);
