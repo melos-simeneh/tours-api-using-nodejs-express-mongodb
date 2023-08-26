@@ -10,10 +10,14 @@ app.use(express.json());
 app.use("/api/tours", tourRoutes);
 
 app.all("*", (req, res, next) => {
-  res.status(404).json({
-    status: "fail",
-    message: `api url ${req.url} is not found`,
-  });
+  // res.status(404).json({
+  //   status: "fail",
+  //   message: `api url ${req.url} is not found`,
+  // });
+  const err = new Error(`api url ${req.url} is not found`);
+  err.status = "fail";
+  err.statusCode = 404;
+  next(err);
 });
 
 app.use((err, req, res, next) => {
