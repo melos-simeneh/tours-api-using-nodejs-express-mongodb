@@ -1,5 +1,6 @@
 const Tour = require("../models/tour.model");
 const APIFeatures = require("../utils/apiFeatures");
+
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = "5";
   req.query.sort = "-ratingsAverage,price";
@@ -42,6 +43,9 @@ exports.getTour = async (req, res) => {
   }
 };
 
+const catchAsync = (fn) => {
+  fn(req, res, next).catch((err) => next(err));
+};
 exports.createTour = async (req, res) => {
   try {
     const newTour = await Tour.create(req.body);
