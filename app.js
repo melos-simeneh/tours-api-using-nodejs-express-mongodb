@@ -1,5 +1,6 @@
 const express = require("express");
 const tourRoutes = require("./routes/tour.routes");
+const AppError = require("./utils/appError");
 
 const app = express();
 
@@ -10,14 +11,7 @@ app.use(express.json());
 app.use("/api/tours", tourRoutes);
 
 app.all("*", (req, res, next) => {
-  // res.status(404).json({
-  //   status: "fail",
-  //   message: `api url ${req.url} is not found`,
-  // });
-  const err = new Error(`api url ${req.url} is not found`);
-  err.status = "fail";
-  err.statusCode = 404;
-  next(err);
+  next(new AppError(`api url ${req.url} not found`, 404));
 });
 
 app.use((err, req, res, next) => {
