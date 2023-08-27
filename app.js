@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const tourRoutes = require("./routes/tour.routes");
 const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/error.controller");
@@ -7,6 +8,7 @@ const app = express();
 
 //Middlewares
 app.use(express.json());
+app.use(cors());
 
 //Routes
 app.use("/api/tours", tourRoutes);
