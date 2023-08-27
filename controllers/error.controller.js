@@ -29,9 +29,13 @@ const sendErrorProd = (err, res) => {
 module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
-  if (process.env.NODE_ENV === "development") {
+  const NODE_ENV = process.env.NODE_ENV;
+
+  if (NODE_ENV === "development") {
     sendErrorDev(err, res);
-  } else if (process.env.NODE_ENV === "production") {
+  } else if (NODE_ENV === "production") {
+    console.log(process.env.NODE_ENV);
+
     sendErrorProd(err, res);
   }
 };
