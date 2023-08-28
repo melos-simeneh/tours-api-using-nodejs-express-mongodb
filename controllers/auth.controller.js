@@ -1,2 +1,13 @@
 const User = require("../models/user.model");
-exports.signup = async (req, res, next) => {};
+const catchAsync = require("../utils/catchAsync");
+
+exports.signup = catchAsync(async (req, res, next) => {
+  const newUser = await Tour.create(req.body);
+  res.status(201).json({
+    status: "success",
+    message: "user created",
+    data: {
+      user: newUser,
+    },
+  });
+});
