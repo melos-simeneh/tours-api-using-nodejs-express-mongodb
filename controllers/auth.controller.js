@@ -11,8 +11,9 @@ const signToken = (id) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const { name, email, password, passwordConfirm } = req.body;
-  const newUser = await User.create({ name, email, password, passwordConfirm });
+  // const { name, email, password, passwordConfirm } = req.body;
+  // const newUser = await User.create({ name, email, password, passwordConfirm });
+  const newUser = await User.create(req.body);
   const token = signToken(newUser._id);
   res.status(201).json({
     status: "success",
@@ -58,4 +59,15 @@ exports.protect = catchAsync(async (req, res, next) => {
     return next(
       new AppError("The user belonging to this token does no longer exist", 401)
     );
+
+  // Check if use changed password after the token was issued
+  if (freshUser.changedPasswordAfter(decoded.iat))
+    return next(
+      new AppError("User recently changed password! Please log in again.", 401)
+    );
+
+  // Grant access to protected route
+  req.user = freshUser;
+
+  next();
 });
