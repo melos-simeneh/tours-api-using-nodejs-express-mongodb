@@ -52,6 +52,10 @@ exports.protect = catchAsync(async (req, res, next) => {
     if (!token) return next(new AppError("Unauthorized access"));
   }
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  console.log(decoded);
-  next();
+
+  const freshUser = await User.findById(decoded.id);
+  if (!freshUser)
+    return next(
+      new AppError("The user belonging to this token does no longer exist", 401)
+    );
 });
