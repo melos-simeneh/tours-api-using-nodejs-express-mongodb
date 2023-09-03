@@ -7,4 +7,4 @@
 ## To run the project
   1. open the project using editor like vscode
   2. open the terminal
-  3. type `npm start` to run the project in development mode, `npm run prod` to run the project in production mode
+  3. type `npm start` to run the project in development mode, `npm run prod` to run the project in production mode on http://localhost:8000
